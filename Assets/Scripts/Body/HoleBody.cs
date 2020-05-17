@@ -12,11 +12,14 @@ public class HoleBody : MonoBehaviour
     private Vector2 initialPosition = default;
     private Vector2 spriteExtents = default;
 
+    private new Collider2D collider = default;
+
     private void Awake()
     {
         SpriteRenderer sprite = GetComponent<SpriteRenderer>();
-
         spriteExtents = sprite.bounds.extents;
+
+        collider = GetComponent<Collider2D>();
 
         initialPosition = transform.position;
         rangeSprite.transform.SetParent(transform.parent, true);
@@ -27,10 +30,6 @@ public class HoleBody : MonoBehaviour
         rangeSprite.gameObject.SetActive(false);
 #endif
     }
-
-    private Collider2D _collider2D = default;
-
-    private Collider2D Collider2D { get => _collider2D ?? (_collider2D = GetComponent<Collider2D>()); }
 
     private void OnCollisionEnter2D(Collision2D collision) { }
 
@@ -45,8 +44,7 @@ public class HoleBody : MonoBehaviour
 
     public bool ContainsBody(TrajectoryBody body)
     {
-        //return Collider2D.IsTouching(body.Collider2D) && Collider2D.bounds.Contains(body.transform.position);
-        return Collider2D.bounds.Contains(body.transform.position);
+        return collider.bounds.Contains(body.transform.position);
     }
 
     public void SetRandomPosition()

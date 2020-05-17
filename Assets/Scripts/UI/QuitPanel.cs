@@ -5,7 +5,6 @@ using MustHave.UI;
 using UnityEditor;
 #endif
 
-
 public class QuitPanel : UIScript
 {
     [SerializeField]

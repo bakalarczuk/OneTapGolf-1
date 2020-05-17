@@ -2,7 +2,6 @@
 
 using UnityEngine;
 using MustHave.Utilities;
-using System.Collections;
 
 [ExecuteInEditMode]
 public class BodyTrajectory : MonoBehaviour
