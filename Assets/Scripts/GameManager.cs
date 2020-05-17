@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿//#define DEBUG_INIT_LEVEL
+
+using UnityEngine;
+using UnityEngine.Events;
 using MustHave.Utilities;
 using System;
 
@@ -28,6 +31,20 @@ public class GameManager : MonoBehaviour
     {
         level = PlayerPrefs.GetInt(PLAYERPREFS_LEVEL, level);
         score = PlayerPrefs.GetInt(PLAYERPREFS_SCORE, score);
+
+        SetPhysics();
+    }
+
+    private void Start()
+    {
+        InitLevel();
+    }
+
+    private void SetPhysics()
+    {
+        Time.fixedDeltaTime = 0.02f;
+        Physics2D.gravity = new Vector2(0f, -BodyTrajectory.GRAVITY);
+        Physics.gravity = Physics2D.gravity;
     }
 
     public void SetLevelResultCallbacks(Action<int> onSuccess, Action<int, int> onFail)
@@ -71,8 +88,19 @@ public class GameManager : MonoBehaviour
 
     private void InitLevel()
     {
-        ball.ResetBody();
-        ballTrajectory.SetRandomInitialVelocity();
-        hole.SetRandomPosition();
+#if DEBUG_INIT_LEVEL
+        hole.SetRangeSpriteActive(true);
+        StartCoroutine(CoroutineUtils.UpdateRoutine(5f, (elaspedTime, transition) =>
+#endif
+        {
+            hole.SetRandomPosition();
+            ball.ResetBody();
+
+            float distance = hole.transform.position.x - ball.transform.position.x;
+            ballTrajectory.SetRandomInitialVelocityForRange(distance * 0.4f, distance * 0.7f);
+        }
+#if DEBUG_INIT_LEVEL
+        , new WaitForSeconds(0.2f)));
+#endif
     }
 }

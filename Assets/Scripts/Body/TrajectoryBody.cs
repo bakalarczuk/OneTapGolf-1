@@ -21,6 +21,9 @@ public class TrajectoryBody : MonoBehaviour
     private void Awake()
     {
         rigidbody = GetComponent<Rigidbody2D>();
+
+        initialPosition = transform.position;
+        initialVelocity = Vector2.zero;
     }
 
     public void ResetBody()

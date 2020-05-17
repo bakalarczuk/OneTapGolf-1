@@ -1,6 +1,4 @@
-﻿//#define DEBUG_RANDOM_VEOCITY
-
-using UnityEngine;
+﻿using UnityEngine;
 using MustHave.Utilities;
 
 [ExecuteInEditMode]
@@ -29,9 +27,6 @@ public class BodyTrajectory : MonoBehaviour
 
     private void Awake()
     {
-        Physics2D.gravity = new Vector2(0f, -GRAVITY);
-        Physics.gravity = Physics2D.gravity;
-
         CreateMarkers();
     }
 
@@ -47,20 +42,13 @@ public class BodyTrajectory : MonoBehaviour
         {
             UpdateTrajectory();
         }
-#if DEBUG_RANDOM_VEOCITY
-        else
-        {
-            SetRandomInitialVelocity();
-        }
-#endif
     }
 #endif
 
-    public void SetRandomInitialVelocity()
+    public void SetRandomInitialVelocityForRange(float minRange, float maxRange)
     {
-        initialSpeed = Random.Range(RANDOM_SPEED_MIN, RANDOM_SPEED_MAX);
         initialVelocitySlopeAngle = Random.Range(RANDOM_VELOCITY_SLOPE_ANGLE_MIN, RANDOM_VELOCITY_SLOPE_ANGLE_MAX);
-
+        initialSpeed = GetInitialSpeedForRange(Random.Range(minRange, maxRange));
         UpdateTrajectory();
     }
 
@@ -127,19 +115,9 @@ public class BodyTrajectory : MonoBehaviour
 
     public float IncreaseRangeWithSpeed(float deltaRange)
     {
-        float slopeAngle = Mathf.Deg2Rad * initialVelocitySlopeAngle;
-        Vector2 v_normalized = new Vector2(Mathf.Cos(slopeAngle), Mathf.Sin(slopeAngle));
-        float denom = 2f * v_normalized.x * v_normalized.y;
-
-        float range = GetRange();
-
-        if (denom > FLOAT_EPSILON)
-        {
-            range += deltaRange;
-            float speed = Mathf.Sqrt(range * GRAVITY / denom);
-            initialSpeed = speed;
-        }
-        return range;
+        float range = GetRange() + deltaRange;
+        initialSpeed = GetInitialSpeedForRange(range);
+        return initialSpeed > 0f ? range : 0f;
     }
 
     public float IncreaseRangeWithVelocitySlopeAngle(float deltaRange)
@@ -160,6 +138,19 @@ public class BodyTrajectory : MonoBehaviour
             }
         }
         return range;
+    }
+
+    private float GetInitialSpeedForRange(float range)
+    {
+        float slopeAngle = Mathf.Deg2Rad * initialVelocitySlopeAngle;
+        Vector2 v_normalized = new Vector2(Mathf.Cos(slopeAngle), Mathf.Sin(slopeAngle));
+        float denom = 2f * v_normalized.x * v_normalized.y;
+
+        if (Mathf.Abs(denom) > FLOAT_EPSILON)
+        {
+            return Mathf.Sqrt(range * GRAVITY / denom);
+        }
+        return 0f;
     }
 
     private float GetRange()

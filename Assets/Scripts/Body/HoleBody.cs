@@ -1,4 +1,4 @@
-﻿//#define DEBUG_RANDOM_POSITION
+﻿#define DEBUG_RANDOM_POSITION
 
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -16,7 +16,6 @@ public class HoleBody : MonoBehaviour
     [SerializeField]
     private Tile groundTileWithoutCollider = default;
 
-
     private new Collider2D collider = default;
 
     private Vector2 initialPosition = default;
@@ -31,29 +30,22 @@ public class HoleBody : MonoBehaviour
 
         initialPosition = transform.position;
         rangeSprite.transform.SetParent(transform.parent, true);
-
-#if DEBUG_RANDOM_POSITION
-        rangeSprite.gameObject.SetActive(true);
-#else
-        rangeSprite.gameObject.SetActive(false);
-#endif
     }
 
     private void Start()
     {
         SetUnderneathTilesCollidersActive(false);
+        SetRangeSpriteActive(false);
     }
 
     private void OnCollisionEnter2D(Collision2D collision) { }
 
     private void OnCollisionStay2D(Collision2D collision) { }
 
-#if DEBUG_RANDOM_POSITION
-    private void Update()
+    public void SetRangeSpriteActive(bool active)
     {
-        SetRandomPosition();
+        rangeSprite.gameObject.SetActive(active);
     }
-#endif
 
     public bool ContainsBody(TrajectoryBody body)
     {
