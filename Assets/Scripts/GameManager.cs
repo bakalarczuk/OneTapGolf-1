@@ -15,25 +15,25 @@ public class GameManager : MonoBehaviour
     private const string PLAYERPREFS_SCORE = "PLAYERPREFS_SCORE";
     private const string PLAYERPREFS_SCORE_BEST = "PLAYERPREFS_SCORE_BEST";
 
-    private Action<int> _onLevelSuccess = default;
-    private Action<int, int> _onLevelFail = default;
+    private Action<int> onLevelSuccess = default;
+    private Action<int, int> onLevelFail = default;
 
-    private int _score = 0;
-    private int _level = 1;
+    private int score = 0;
+    private int level = 1;
 
-    public int Score => _score;
-    public int Level => _level;
+    public int Score => score;
+    public int Level => level;
 
     private void Awake()
     {
-        _level = PlayerPrefs.GetInt(PLAYERPREFS_LEVEL, _level);
-        _score = PlayerPrefs.GetInt(PLAYERPREFS_SCORE, _score);
+        level = PlayerPrefs.GetInt(PLAYERPREFS_LEVEL, level);
+        score = PlayerPrefs.GetInt(PLAYERPREFS_SCORE, score);
     }
 
     public void SetLevelResultCallbacks(Action<int> onSuccess, Action<int, int> onFail)
     {
-        _onLevelSuccess = onSuccess;
-        _onLevelFail = onFail;
+        onLevelSuccess = onSuccess;
+        onLevelFail = onFail;
     }
 
     public void StartLevelResultCheckRoutine(Action onEnd)
@@ -41,14 +41,14 @@ public class GameManager : MonoBehaviour
         this.StartCoroutineActionAfterTime(() => {
             if (hole.ContainsBody(ball))
             {
-                PlayerPrefs.SetInt(PLAYERPREFS_SCORE, ++_score);
-                PlayerPrefs.SetInt(PLAYERPREFS_SCORE_BEST, Mathf.Max(PlayerPrefs.GetInt(PLAYERPREFS_SCORE_BEST), _score));
+                PlayerPrefs.SetInt(PLAYERPREFS_SCORE, ++score);
+                PlayerPrefs.SetInt(PLAYERPREFS_SCORE_BEST, Mathf.Max(PlayerPrefs.GetInt(PLAYERPREFS_SCORE_BEST), score));
 
-                _onLevelSuccess?.Invoke(_score);
+                onLevelSuccess?.Invoke(score);
             }
             else
             {
-                _onLevelFail?.Invoke(_score, PlayerPrefs.GetInt(PLAYERPREFS_SCORE_BEST));
+                onLevelFail?.Invoke(score, PlayerPrefs.GetInt(PLAYERPREFS_SCORE_BEST));
             }
             onEnd?.Invoke();
         }, 2f);
@@ -56,15 +56,15 @@ public class GameManager : MonoBehaviour
 
     public void ResetGame()
     {
-        PlayerPrefs.SetInt(PLAYERPREFS_LEVEL, _level = 1);
-        PlayerPrefs.SetInt(PLAYERPREFS_SCORE, _score = 0);
+        PlayerPrefs.SetInt(PLAYERPREFS_LEVEL, level = 1);
+        PlayerPrefs.SetInt(PLAYERPREFS_SCORE, score = 0);
 
         InitLevel();
     }
 
     public void StartNextLevel()
     {
-        PlayerPrefs.SetInt(PLAYERPREFS_LEVEL, ++_level);
+        PlayerPrefs.SetInt(PLAYERPREFS_LEVEL, ++level);
 
         InitLevel();
     }

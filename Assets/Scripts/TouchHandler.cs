@@ -12,7 +12,7 @@ public class TouchHandler : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
     private GameManager gameManager = default;
     private GameScreen gameScreen = default;
 
-    private Coroutine _updateTrajectoryRoutine = default;
+    private Coroutine updateTrajectoryRoutine = default;
 
     private void Awake()
     {
@@ -22,18 +22,18 @@ public class TouchHandler : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        if (_updateTrajectoryRoutine == null)
+        if (updateTrajectoryRoutine == null)
         {
-            _updateTrajectoryRoutine = StartCoroutine(UpdateTrajectoryRoutine());
+            updateTrajectoryRoutine = StartCoroutine(UpdateTrajectoryRoutine());
         }
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        if (_updateTrajectoryRoutine != null)
+        if (updateTrajectoryRoutine != null)
         {
-            StopCoroutine(_updateTrajectoryRoutine);
-            _updateTrajectoryRoutine = null;
+            StopCoroutine(updateTrajectoryRoutine);
+            updateTrajectoryRoutine = null;
         }
         Shoot();
     }
@@ -76,6 +76,6 @@ public class TouchHandler : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
         }
         Shoot();
 
-        _updateTrajectoryRoutine = null;
+        updateTrajectoryRoutine = null;
     }
 }
