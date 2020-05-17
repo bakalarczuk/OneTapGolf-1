@@ -52,7 +52,7 @@ public class TrajectoryBody : MonoBehaviour
     {
         float gravity = Physics2D.gravity.y;
         float t = (transform.position.x - initialPosition.x) / initialVelocity.x;
-        return new Vector2(initialVelocity.x, initialVelocity.y + gravity * t * t);
+        return new Vector2(initialVelocity.x, initialVelocity.y + gravity * t);
     }
 
     private IEnumerator UpdatePositionRoutine(Action onEnd)
