@@ -23,11 +23,14 @@ public class TrajectoryBody : MonoBehaviour
         rigidbody = GetComponent<Rigidbody2D>();
     }
 
-    public void ResetRigidBody()
+    public void ResetBody()
     {
-        rigidbody.simulated = false;
+        rigidbody.simulated = true;
         rigidbody.velocity = Vector2.zero;
-        rigidbody.transform.position = initialPosition;
+
+        transform.position = initialPosition;
+
+        trajectory.transform.SetParent(transform, true);
     }
 
     private void UpdatePosition(float deltaTime)
@@ -54,6 +57,8 @@ public class TrajectoryBody : MonoBehaviour
 
     private IEnumerator UpdatePositionRoutine(Action onEnd)
     {
+        trajectory.transform.SetParent(transform.parent, true);
+
         rigidbody.simulated = false;
 
         initialVelocity = trajectory.GetInitialVelocity();

@@ -71,7 +71,7 @@ public class GameManager : MonoBehaviour
 
     private void InitLevel()
     {
-        ball.ResetRigidBody();
+        ball.ResetBody();
         ballTrajectory.SetRandomInitialVelocity();
         hole.SetRandomPosition();
     }
