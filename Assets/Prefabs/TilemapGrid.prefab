@@ -558,6 +558,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rangeSprite: {fileID: 1354765954}
+  tilemap: {fileID: 1742926129297809213}
+  groundTileWithCollider: {fileID: 11400000, guid: 9a9daa2db3d8e1f46bc483b3bbd7e823,
+    type: 2}
+  groundTileWithoutCollider: {fileID: 11400000, guid: f11270b8a305982468e11a6f8b6dbea2,
+    type: 2}
 --- !u!1 &1956734698
 GameObject:
   m_ObjectHideFlags: 0
@@ -1043,49 +1048,49 @@ Tilemap:
       m_ColliderType: 2
   - first: {x: 2, y: -3, z: 0}
     second:
-      m_TileIndex: 3
+      m_TileIndex: 0
       m_TileSpriteIndex: 1
       m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_ObjectToInstantiate: {fileID: 0}
       m_TileFlags: 1
-      m_ColliderType: 0
+      m_ColliderType: 2
   - first: {x: 3, y: -3, z: 0}
     second:
-      m_TileIndex: 3
+      m_TileIndex: 0
       m_TileSpriteIndex: 1
       m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_ObjectToInstantiate: {fileID: 0}
       m_TileFlags: 1
-      m_ColliderType: 0
+      m_ColliderType: 2
   - first: {x: 4, y: -3, z: 0}
     second:
-      m_TileIndex: 3
+      m_TileIndex: 0
       m_TileSpriteIndex: 1
       m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_ObjectToInstantiate: {fileID: 0}
       m_TileFlags: 1
-      m_ColliderType: 0
+      m_ColliderType: 2
   - first: {x: 5, y: -3, z: 0}
     second:
-      m_TileIndex: 3
+      m_TileIndex: 0
       m_TileSpriteIndex: 1
       m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_ObjectToInstantiate: {fileID: 0}
       m_TileFlags: 1
-      m_ColliderType: 0
+      m_ColliderType: 2
   - first: {x: 6, y: -3, z: 0}
     second:
-      m_TileIndex: 3
+      m_TileIndex: 0
       m_TileSpriteIndex: 1
       m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_ObjectToInstantiate: {fileID: 0}
       m_TileFlags: 1
-      m_ColliderType: 0
+      m_ColliderType: 2
   - first: {x: 7, y: -3, z: 0}
     second:
       m_TileIndex: 0
@@ -1133,14 +1138,14 @@ Tilemap:
       m_ColliderType: 2
   m_AnimatedTiles: {}
   m_TileAssetArray:
-  - m_RefCount: 19
+  - m_RefCount: 24
     m_Data: {fileID: 11400000, guid: 9a9daa2db3d8e1f46bc483b3bbd7e823, type: 2}
   - m_RefCount: 13
     m_Data: {fileID: 0}
   - m_RefCount: 24
     m_Data: {fileID: 11400000, guid: e2fd16dc838e6f24e89754aeacaf95a3, type: 2}
-  - m_RefCount: 5
-    m_Data: {fileID: 11400000, guid: f11270b8a305982468e11a6f8b6dbea2, type: 2}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
   m_TileSpriteArray:
   - m_RefCount: 0
     m_Data: {fileID: 0}

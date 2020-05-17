@@ -1,6 +1,7 @@
 ﻿//#define DEBUG_RANDOM_POSITION
 
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 [RequireComponent(typeof(Collider2D))]
 [RequireComponent(typeof(SpriteRenderer))]
@@ -8,11 +9,18 @@ public class HoleBody : MonoBehaviour
 {
     [SerializeField]
     private SpriteRenderer rangeSprite = default;
+    [SerializeField]
+    private Tilemap tilemap = default;
+    [SerializeField]
+    private Tile groundTileWithCollider = default;
+    [SerializeField]
+    private Tile groundTileWithoutCollider = default;
+
+
+    private new Collider2D collider = default;
 
     private Vector2 initialPosition = default;
     private Vector2 spriteExtents = default;
-
-    private new Collider2D collider = default;
 
     private void Awake()
     {
@@ -31,6 +39,11 @@ public class HoleBody : MonoBehaviour
 #endif
     }
 
+    private void Start()
+    {
+        SetUnderneathTilesCollidersActive(false);
+    }
+
     private void OnCollisionEnter2D(Collision2D collision) { }
 
     private void OnCollisionStay2D(Collision2D collision) { }
@@ -47,8 +60,24 @@ public class HoleBody : MonoBehaviour
         return collider.bounds.Contains(body.transform.position);
     }
 
+    private void SetUnderneathTilesCollidersActive(bool active)
+    {
+        Vector3Int holeCell = tilemap.WorldToCell(transform.position);
+        Vector3Int cell = holeCell;
+
+        Tile groundTile = active ? groundTileWithCollider : groundTileWithoutCollider;
+
+        for (int i = -1; i < 2; i++)
+        {
+            cell.x = i + holeCell.x;
+            tilemap.SetTile(cell, groundTile);
+        }
+    }
+
     public void SetRandomPosition()
     {
+        SetUnderneathTilesCollidersActive(true);
+
         Vector2 position = transform.position;
 
         float maxDeltaX = rangeSprite.bounds.extents.x - spriteExtents.x;
@@ -63,5 +92,7 @@ public class HoleBody : MonoBehaviour
             position.x = initialPosition.x - deltaX;
         }
         transform.position = position;
+
+        SetUnderneathTilesCollidersActive(false);
     }
 }
