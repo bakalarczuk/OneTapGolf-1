@@ -33,19 +33,20 @@ public class TrajectoryBody : MonoBehaviour
         trajectory.transform.SetParent(transform, true);
     }
 
-    private void UpdatePosition(float deltaTime)
+    private Vector2 GetUpdatedPosition(float deltaTime)
     {
-        float gravity = Physics2D.gravity.y;
         Vector2 v0 = initialVelocity;
         if (Mathf.Abs(v0.x) > BodyTrajectory.FLOAT_EPSILON)
         {
+            float gravity = Physics2D.gravity.y;
             float x0 = initialPosition.x;
             float y0 = initialPosition.y;
             float x = transform.position.x + v0.x * deltaTime;
             float x_shifted = x - x0;
             float y = y0 + x_shifted * v0.y / v0.x + gravity * x_shifted * x_shifted / (2f * v0.x * v0.x);
-            transform.position = new Vector2(x, y);
+            return new Vector2(x, y);
         }
+        return transform.position;
     }
 
     private Vector2 GetVelocity()
@@ -64,9 +65,10 @@ public class TrajectoryBody : MonoBehaviour
         initialVelocity = trajectory.GetInitialVelocity();
         initialPosition = transform.position;
 
-        while (transform.position.y >= initialPosition.y)
+        Vector2 updatedPosition;
+        while ((updatedPosition = GetUpdatedPosition(Time.deltaTime)).y >= initialPosition.y)
         {
-            UpdatePosition(Time.deltaTime);
+            transform.position = updatedPosition;
             yield return null;
         }
 
