@@ -67,8 +67,8 @@ public class TouchHandler : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
     {
         float range = 0f;
         float maxRange = GetBallRangeMax();
-        float deltaRangeFactor = 1.5f + Mathf.Min(10f, gameManager.Level * 0.25f);
-        float deltaRange = Time.fixedDeltaTime * deltaRangeFactor;
+        float deltaRangeFactor = 2f + Mathf.Min(10f, gameManager.Level * 0.15f);
+        float deltaRange = Time.unscaledDeltaTime * deltaRangeFactor;
 
         while (range <= maxRange)
         {

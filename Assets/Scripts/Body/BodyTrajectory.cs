@@ -53,7 +53,7 @@ public class BodyTrajectory : MonoBehaviour
         UpdateTrajectory();
     }
 
-    public Vector3 GetInitialVelocity()
+    public Vector2 GetInitialVelocity()
     {
         float slopeAngle = Mathf.Deg2Rad * initialVelocitySlopeAngle;
         return initialSpeed * new Vector2(Mathf.Cos(slopeAngle), Mathf.Sin(slopeAngle));

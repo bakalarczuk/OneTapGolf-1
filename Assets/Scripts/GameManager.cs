@@ -1,4 +1,5 @@
 ﻿//#define DEBUG_INIT_LEVEL
+//#define DEBUG_CUSTOM_FPS
 
 using UnityEngine;
 using UnityEngine.Events;
@@ -32,6 +33,10 @@ public class GameManager : MonoBehaviour
         level = PlayerPrefs.GetInt(PLAYERPREFS_LEVEL, level);
         score = PlayerPrefs.GetInt(PLAYERPREFS_SCORE, score);
 
+#if DEBUG_CUSTOM_FPS
+        Application.targetFrameRate = 100;
+        QualitySettings.vSyncCount = 0;
+#endif
         SetPhysics();
     }
 
