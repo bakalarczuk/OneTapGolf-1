@@ -36,7 +36,6 @@ public class GameCanvas : UIBehaviour
             if (bgSpriteExtents.x > 0.1f && bgSpriteExtents.y > 0.1f)
             {
                 SetCameraSize(bgSpriteExtents);
-                SetGameScreenAnchors(2f * bgSpriteExtents);
             }
         }
     }
