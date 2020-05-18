@@ -22,9 +22,11 @@ public class TouchHandler : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
 
     public void OnPointerDown(PointerEventData eventData)
     {
+        ballTrajectory.StopVelocityAngleOscillationRoutine();
+
         if (updateTrajectoryRoutine == null)
         {
-            updateTrajectoryRoutine = StartCoroutine(UpdateTrajectoryRoutine());
+            updateTrajectoryRoutine = StartCoroutine(UpdateBallTrajectoryRoutine());
         }
     }
 
@@ -54,17 +56,17 @@ public class TouchHandler : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
         }
     }
 
-    private float GetMaxRange()
+    private float GetBallRangeMax()
     {
         Camera camera = Camera.main;
         float cameraRightEdgeX = camera.transform.position.x + camera.orthographicSize * camera.aspect;
         return cameraRightEdgeX - ball.transform.position.x;
     }
 
-    private IEnumerator UpdateTrajectoryRoutine()
+    private IEnumerator UpdateBallTrajectoryRoutine()
     {
         float range = 0f;
-        float maxRange = GetMaxRange();
+        float maxRange = GetBallRangeMax();
         float deltaRangeFactor = 1.5f + Mathf.Min(10f, gameManager.Level * 0.25f);
         float deltaRange = Time.fixedDeltaTime * deltaRangeFactor;
 

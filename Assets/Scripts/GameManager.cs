@@ -40,13 +40,6 @@ public class GameManager : MonoBehaviour
         InitLevel();
     }
 
-    private void SetPhysics()
-    {
-        Time.fixedDeltaTime = 0.02f;
-        Physics2D.gravity = new Vector2(0f, -BodyTrajectory.GRAVITY);
-        Physics.gravity = Physics2D.gravity;
-    }
-
     public void SetLevelResultCallbacks(Action<int> onSuccess, Action<int, int> onFail)
     {
         onLevelSuccess = onSuccess;
@@ -86,6 +79,13 @@ public class GameManager : MonoBehaviour
         InitLevel();
     }
 
+    private void SetPhysics()
+    {
+        Time.fixedDeltaTime = 0.02f;
+        Physics2D.gravity = new Vector2(0f, -BodyTrajectory.GRAVITY);
+        Physics.gravity = Physics2D.gravity;
+    }
+
     private void InitLevel()
     {
 #if DEBUG_INIT_LEVEL
@@ -97,10 +97,12 @@ public class GameManager : MonoBehaviour
             ball.ResetBody();
 
             float distance = hole.transform.position.x - ball.transform.position.x;
-            ballTrajectory.SetRandomInitialVelocityForRange(distance * 0.4f, distance * 0.7f);
+            ballTrajectory.SetInitialVelocityForRandomRange(distance * 0.4f, distance * 0.7f);
         }
 #if DEBUG_INIT_LEVEL
         , new WaitForSeconds(0.2f)));
+#else
+        ballTrajectory.StartVelocityAngleOscillationRoutine(2f - Mathf.Min(1.25f, (level - 1) * 0.05f));
 #endif
     }
 }

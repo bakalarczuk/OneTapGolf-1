@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using MustHave.Utilities;
+using System.Collections;
 
 [ExecuteInEditMode]
 public class BodyTrajectory : MonoBehaviour
@@ -20,10 +21,10 @@ public class BodyTrajectory : MonoBehaviour
     public const float GRAVITY = 10f;
 
     private const int MARKERS_COUNT = 75;
-    private const float RANDOM_VELOCITY_SLOPE_ANGLE_MAX = 65f;
-    private const float RANDOM_VELOCITY_SLOPE_ANGLE_MIN = 35f;
-    private const float RANDOM_SPEED_MIN = 8f;
-    private const float RANDOM_SPEED_MAX = 10f;
+    private const float VELOCITY_SLOPE_ANGLE_MAX = 65f;
+    private const float VELOCITY_SLOPE_ANGLE_MIN = 30f;
+
+    private Coroutine velocityAngleOscillationRoutine = default;
 
     private void Awake()
     {
@@ -45,9 +46,9 @@ public class BodyTrajectory : MonoBehaviour
     }
 #endif
 
-    public void SetRandomInitialVelocityForRange(float minRange, float maxRange)
+    public void SetInitialVelocityForRandomRange(float minRange, float maxRange)
     {
-        initialVelocitySlopeAngle = Random.Range(RANDOM_VELOCITY_SLOPE_ANGLE_MIN, RANDOM_VELOCITY_SLOPE_ANGLE_MAX);
+        initialVelocitySlopeAngle = 45f;
         initialSpeed = GetInitialSpeedForRange(Random.Range(minRange, maxRange));
         UpdateTrajectory();
     }
@@ -56,6 +57,39 @@ public class BodyTrajectory : MonoBehaviour
     {
         float slopeAngle = Mathf.Deg2Rad * initialVelocitySlopeAngle;
         return initialSpeed * new Vector2(Mathf.Cos(slopeAngle), Mathf.Sin(slopeAngle));
+    }
+
+    public void StopVelocityAngleOscillationRoutine()
+    {
+        if (velocityAngleOscillationRoutine != null)
+        {
+            StopCoroutine(velocityAngleOscillationRoutine);
+        }
+        velocityAngleOscillationRoutine = null;
+    }
+
+    public void StartVelocityAngleOscillationRoutine(float period)
+    {
+        velocityAngleOscillationRoutine = StartCoroutine(VelocityAngleOscillationRoutine(period));
+    }
+
+    public IEnumerator VelocityAngleOscillationRoutine(float period)
+    {
+        float begAngle = VELOCITY_SLOPE_ANGLE_MIN;
+        float endAngle = VELOCITY_SLOPE_ANGLE_MAX;
+
+        while (true)
+        {
+            yield return CoroutineUtils.UpdateRoutine(period, (elapsedTime, transition) => {
+                initialVelocitySlopeAngle = Mathf.Lerp(begAngle, endAngle, transition);
+                UpdateTrajectory();
+            });
+            initialVelocitySlopeAngle = endAngle;
+
+            float tempAngle = begAngle;
+            begAngle = endAngle;
+            endAngle = tempAngle;
+        }
     }
 
     public void UpdateTrajectory()
