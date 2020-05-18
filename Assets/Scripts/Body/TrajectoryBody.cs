@@ -1,4 +1,6 @@
-﻿using System;
+﻿//#define DEBUG_UNITY_PHYSICS
+
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -63,10 +65,12 @@ public class TrajectoryBody : MonoBehaviour
     {
         trajectory.transform.SetParent(transform.parent, true);
 
-        rigidbody.simulated = false;
-
         initialVelocity = trajectory.GetInitialVelocity();
         initialPosition = transform.position;
+
+#if DEBUG_UNITY_PHYSICS
+#else
+        rigidbody.simulated = false;
 
         Vector2 updatedPosition;
         while ((updatedPosition = GetUpdatedPosition(Time.deltaTime)).y >= initialPosition.y)
@@ -74,6 +78,7 @@ public class TrajectoryBody : MonoBehaviour
             transform.position = updatedPosition;
             yield return null;
         }
+#endif
 
         rigidbody.simulated = true;
         rigidbody.velocity = GetVelocity();
@@ -81,6 +86,8 @@ public class TrajectoryBody : MonoBehaviour
         updatePositionRoutine = null;
 
         onEnd?.Invoke();
+
+        yield break;
     }
 
     public void StartPositionUpdateRoutine(Action onEnd)
