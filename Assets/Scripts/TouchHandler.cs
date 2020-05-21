@@ -26,7 +26,7 @@ public class TouchHandler : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
 
         if (updateTrajectoryRoutine == null)
         {
-            updateTrajectoryRoutine = StartCoroutine(UpdateBallTrajectoryRoutine());
+            updateTrajectoryRoutine = StartCoroutine(IncreaseBallTrajectoryRangeRoutine());
         }
     }
 
@@ -63,16 +63,18 @@ public class TouchHandler : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
         return cameraRightEdgeX - ball.transform.position.x;
     }
 
-    private IEnumerator UpdateBallTrajectoryRoutine()
+    private IEnumerator IncreaseBallTrajectoryRangeRoutine()
     {
-        float range = 0f;
         float maxRange = GetBallRangeMax();
         float deltaRangeFactor = 2f + Mathf.Min(10f, gameManager.Level * 0.15f);
-        float deltaRange = Time.unscaledDeltaTime * deltaRangeFactor;
+        float begRange = ballTrajectory.GetRange();
+        float range = begRange;
+        float startTime = Time.unscaledTime;
 
         while (range <= maxRange)
         {
-            range = ballTrajectory.IncreaseRangeWithSpeed(deltaRange);
+            range = begRange + (Time.unscaledTime - startTime) * deltaRangeFactor;
+            ballTrajectory.SetInitialSpeedForRange(range);
             ballTrajectory.UpdateTrajectory();
             yield return null;
         }

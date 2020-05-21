@@ -38,6 +38,15 @@ public class TrajectoryBody : MonoBehaviour
         trajectory.transform.SetParent(transform, true);
     }
 
+    public void StartPositionUpdateRoutine(Action onEnd)
+    {
+        if (updatePositionRoutine != null)
+        {
+            StopCoroutine(updatePositionRoutine);
+        }
+        updatePositionRoutine = StartCoroutine(UpdatePositionRoutine(onEnd));
+    }
+
     private Vector2 GetUpdatedPosition(float deltaTime)
     {
         Vector2 v0 = initialVelocity;
@@ -88,14 +97,5 @@ public class TrajectoryBody : MonoBehaviour
         onEnd?.Invoke();
 
         yield break;
-    }
-
-    public void StartPositionUpdateRoutine(Action onEnd)
-    {
-        if (updatePositionRoutine != null)
-        {
-            StopCoroutine(updatePositionRoutine);
-        }
-        updatePositionRoutine = StartCoroutine(UpdatePositionRoutine(onEnd));
     }
 }

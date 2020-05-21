@@ -147,7 +147,12 @@ public class BodyTrajectory : MonoBehaviour
         }
     }
 
-    public float IncreaseRangeWithSpeed(float deltaRange)
+    public void SetInitialSpeedForRange(float range)
+    {
+        initialSpeed = GetInitialSpeedForRange(range);
+    }
+
+    public float IncreaseRangeWithInitialSpeed(float deltaRange)
     {
         float range = GetRange() + deltaRange;
         initialSpeed = GetInitialSpeedForRange(range);
@@ -174,6 +179,12 @@ public class BodyTrajectory : MonoBehaviour
         return range;
     }
 
+    public float GetRange()
+    {
+        Vector2 v0 = GetInitialVelocity();
+        return 2f * v0.x * v0.y / GRAVITY;
+    }
+
     private float GetInitialSpeedForRange(float range)
     {
         float slopeAngle = Mathf.Deg2Rad * initialVelocitySlopeAngle;
@@ -185,12 +196,6 @@ public class BodyTrajectory : MonoBehaviour
             return Mathf.Sqrt(range * GRAVITY / denom);
         }
         return 0f;
-    }
-
-    private float GetRange()
-    {
-        Vector2 v0 = GetInitialVelocity();
-        return 2f * v0.x * v0.y / GRAVITY;
     }
 
     private void CreateMarkers()
